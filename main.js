@@ -37,7 +37,7 @@ function realizarPedido() {
 
   let quiereMas = confirm("¿Desea agregar algo más?");
   if (quiereMas == false) {
-    mostrarMensaje("Precio total de todos los productos: " + precioTotal);
+    mostrarMensaje("El precio total de todos los productos es: " + precioTotal);
   } else {
     realizarPedido();
   }
