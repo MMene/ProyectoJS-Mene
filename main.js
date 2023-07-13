@@ -32,7 +32,7 @@ function realizarPedido() {
   let precio = calcularPrecio(productos, cantidad);
   if (precio > 0) {
     precioTotal += precio;
-    mostrarMensaje("Precio total: "+ precioTotal);
+    mostrarMensaje("El precio es: "+ precio);
   }
 
   let quiereMas = confirm("¿Desea agregar algo más?");
