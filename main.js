@@ -1,67 +1,144 @@
-const Producto = function(nombre, precio, stock) {
-  this.nombre = nombre;
-  this.precio = precio;
-  this.stock = stock;
+const lista = [
+  { nombre: "Sueter", precio: 5000, stock: 10 },
+  { nombre: "Pantalon", precio: 10000, stock: 5 },
+  { nombre: "Campera", precio: 50000, stock: 3 },
+  { nombre: "Remera", precio: 2000, stock: 25 },
+  { nombre: "Cadenita", precio: 1000, stock: 50 }
+];
+
+const carrito = [];
+
+const productosDiv = document.getElementById("productos");
+const carritoLista = document.getElementById("carrito-lista");
+const precioTotalElement = document.getElementById("precio-total");
+const finalizarCompraButton = document.getElementById("finalizar-compra");
+const repetirCompraButton = document.getElementById("repetir-compra");
+const mensajeCompra = document.getElementById("mensaje-compra");
+const productosConInput = new Set(); // Usamos un Set para almacenar los productos con inputs
+
+
+lista.forEach(producto => {
+  const productoCard = document.createElement("div");
+  productoCard.classList.add("col-lg-4", "col-md-6", "mb-4"); // Estilos de Bootstrap para el diseño de la tarjeta
+  productoCard.innerHTML = `
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">${producto.nombre}</h5>
+        <p class="card-text">Precio: $${producto.precio}</p>
+        <p class="card-text">Stock: ${producto.stock} unidades</p>
+        <button class="btn btn-primary" data-producto="${producto.nombre}" data-precio="${producto.precio}">Agregar al Carrito</button>
+      </div>
+    </div>
+  `;
+  productosDiv.appendChild(productoCard);
+});
+
+const agregarBotones = document.querySelectorAll("[data-producto]");
+agregarBotones.forEach(button => {
+  button.addEventListener("click", mostrarInputCantidad);
+});
+
+
+function mostrarInputCantidad(event) {
+  const producto = event.target.getAttribute("data-producto");
+  const precio = parseFloat(event.target.getAttribute("data-precio"));
+
+  if (!productosConInput.has(producto)) { // Verificamos si ya se generó input
+    const cantidadInput = document.createElement("input");
+    cantidadInput.type = "number";
+    cantidadInput.placeholder = "Ingrese la cantidad";
+
+    const confirmarButton = document.createElement("button");
+    confirmarButton.textContent = "Confirmar";
+
+    confirmarButton.addEventListener("click", () => {
+      const cantidad = parseInt(cantidadInput.value);
+      if (!isNaN(cantidad) && cantidad > 0) {
+        agregarAlCarrito(producto, precio, cantidad);
+        cantidadInput.remove();
+        confirmarButton.remove();
+        productosConInput.delete(producto); // Eliminamos el producto del conjunto
+      } else {
+        alert("Ingrese una cantidad válida.");
+      }
+    });
+
+    const productoDiv = event.target.parentNode;
+    productoDiv.appendChild(cantidadInput);
+    productoDiv.appendChild(confirmarButton);
+
+    productosConInput.add(producto); // Agregamos el producto al conjunto
+  }
 }
 
-let producto1 = new Producto("sueter", 5000, 10);
-let producto2 = new Producto("pantalon", 10000, 5);
-let producto3 = new Producto("campera", 50000, 3);
-let producto4 = new Producto("remera", 2000, 25);
-let producto5 = new Producto("cadenita", 1000, 50);
 
-let lista = [producto1, producto2, producto3, producto4, producto5];
+function cargarCarritoDesdeStorage() {
+  const carritoGuardado = localStorage.getItem("carrito");
+  if (carritoGuardado) {
+    carrito.push(...JSON.parse(carritoGuardado));
+  }
+}
 
-function buscarProducto() {
-  let palabraClave = prompt("Ingrese el producto que desea buscar");
-  let resultado = lista.filter((producto) => producto.nombre.includes(palabraClave));
-
-  if (resultado.length > 0) {
-    console.table(resultado);
-    return true;
+function agregarAlCarrito(producto, precio, cantidad) {
+  const productoEncontrado = lista.find(item => item.nombre === producto);
+  if (productoEncontrado.stock >= cantidad) {
+    carrito.push({ producto, precio, cantidad });
+    productoEncontrado.stock -= cantidad;
+    actualizarCarrito();
+    guardarCarritoEnStorage();
+    mostrarNotificacion("Producto agregado al carrito");
   } else {
-    alert("No se encontro ninguna coincidencia con: " + palabraClave);
-    return false;
+    mostrarStockNoDisponible();
   }
 }
 
-function calcularPrecio(producto, cantidad) {
-  let productoEncontrado = lista.find((p) => p.nombre.toLowerCase() === producto.toLowerCase());
+function actualizarCarrito() {
+  carritoLista.innerHTML = "";
+  let precioTotal = 0;
+  carrito.forEach(item => {
+    const itemLi = document.createElement("li");
+    itemLi.textContent = `${item.cantidad}x ${item.producto} - $${item.precio * item.cantidad}`;
+    carritoLista.appendChild(itemLi);
+    precioTotal += item.precio * item.cantidad;
+  });
+  precioTotalElement.textContent = `Precio total: $${precioTotal}`;
 
-  if (productoEncontrado) {
-    return productoEncontrado.precio * cantidad;
-  } else {
-    console.log("Producto inválido");
-    return 0;
+  if (repetirCompra) {
+    cargarCarritoDesdeStorage();
   }
 }
 
-function mostrarMensaje(mensaje) {
-  console.log(mensaje);
+function guardarCarritoEnStorage() {
+  localStorage.setItem("carrito", JSON.stringify(carrito));
 }
 
-function realizarPedido() {
-  let productos = prompt("Por favor, ingrese el producto que desea agregar al carro: Sueter, Pantalon, Campera, Remera, Cadenita");
-  let cantidad = parseInt(prompt("¿Cuántas unidades?"));
-  while (cantidad <= 0) {
-    cantidad = parseInt(prompt("Por favor, ingrese un número válido para la cantidad:"));
-  }
-  let precio = calcularPrecio(productos, cantidad);
-  if (precio > 0) {
-    precioTotal += precio;
-    mostrarMensaje("El precio es: " + precio);
-  }
-
-  let quiereMas = confirm("¿Desea agregar algo más?");
-  if (quiereMas === true) {
-    realizarPedido();
-  } else {
-    mostrarMensaje("El precio total de todos los productos es: " + precioTotal);
-  }
+function mostrarMensajeCompra() {
+  mensajeCompra.style.display = "block";
+  setTimeout(() => {
+    mensajeCompra.style.display = "none";
+  }, 3000);
 }
 
-let precioTotal = 0;
-
-if (buscarProducto()) {
-  realizarPedido();
+function mostrarStockNoDisponible() {
+  const mensajeStock = document.getElementById("mensaje-stock");
+  mensajeStock.style.display = "block";
+  setTimeout(() => {
+    mensajeStock.style.display = "none";
+  }, 3000);
 }
+
+
+finalizarCompraButton.addEventListener("click", () => {
+  guardarCarritoEnStorage();
+  mostrarMensajeCompra();
+  carrito.length = 0; // Vaciar el carrito en la interfaz
+  actualizarCarrito();
+});
+
+repetirCompraButton.addEventListener("click", () => {
+  cargarCarritoDesdeStorage();
+  actualizarCarrito(true);
+});
+
+
+

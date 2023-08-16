@@ -1,38 +1,126 @@
+html, body {
+  overflow-x: hidden;
+}
+
 body {
     margin: 0;
     padding: 0;
   }
   
-  .bg-dark-green {
-    background-color: rgba(1, 36, 1, 0.795);
-  }
-  
   .header {
-    background-image: url("../assets/images/pullover.jpg");
+    background-image: url("../assets/images/banner.png");
     background-size: cover;
     background-position: center;
     height: 300px; /* Ajusta la altura de la imagen según tus necesidades */
+    max-width: 100%;
   }
   
   .navbar {
     width: 80%;
-    margin-top: 30px;
     margin-left: auto;
     margin-right: auto;
+    background-color: transparent;
+    border: none;
+    color: black;
   }
   
-  .margin {
-    margin: 0px;
+/* Estilos para las tarjetas de productos */
+.card {
+  margin-left: 30px;
+  max-width: 80%;
+  margin-right: 30px;
+  margin-top: 30px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.card-title {
+  font-size: 1.25rem;
+}
+
+.card-text {
+  font-size: 1rem;
+  color: #555;
+}
+
+/* Espaciado entre las tarjetas */
+.mb-4 {
+  margin-bottom: 1.5rem;
+}
+
+.error {
+  background-color: #ff5722; /* Fondo rojo */
+}
+
+.popup {
+  display: none;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #af5b4c; /* Cambia el color a tu preferencia */
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 5px;
+  z-index: 1000;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  animation: fadeOut 6s forwards;
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
   }
-  
-  .card {
-    width: 18rem;
-    margin: 10px;
+  100% {
+    opacity: 0;
+    display: none;
   }
-  
-  .card-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
-    padding-top: 20px; /* Espacio entre el encabezado y las tarjetas */
-  }
+}
+
+
+#carrito {
+  text-align: center;
+  border: solid 2px rgb(104, 28, 28);
+  padding: 20px;
+  max-width: 40%;
+  margin: 0 auto;
+  margin-bottom: 30px;
+  background-color: #f9f9f9;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#carrito-lista {
+  list-style: none;
+  padding: 0;
+}
+
+#carrito-lista li {
+  margin-bottom: 10px;
+  padding: 5px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+}
+
+#precio-total {
+  font-weight: bold;
+  margin-top: 15px;
+}
+
+#finalizar-compra,
+#repetir-compra {
+  margin-top: 15px;
+}
+
+#mensaje-compra {
+  display: none;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #4caf50;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 5px;
+  z-index: 1000;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
