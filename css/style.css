@@ -11,7 +11,7 @@ body {
     background-image: url("../assets/images/banner.png");
     background-size: cover;
     background-position: center;
-    height: 300px; /* Ajusta la altura de la imagen según tus necesidades */
+    height: 300px;
     max-width: 100%;
   }
   
@@ -50,7 +50,7 @@ body {
 }
 
 .error {
-  background-color: #ff5722; /* Fondo rojo */
+  background-color: #ff5722;
 }
 
 .popup {
@@ -58,13 +58,17 @@ body {
   position: fixed;
   bottom: 20px;
   right: 20px;
-  background-color: #af5b4c; /* Cambia el color a tu preferencia */
+  background-color: #af5b4c;
   color: #fff;
   padding: 10px 20px;
   border-radius: 5px;
   z-index: 1000;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   animation: fadeOut 6s forwards;
+}
+.advertencia{
+  background-color: yellow;
+  color: black;
 }
 
 @keyframes fadeOut {
@@ -122,5 +126,28 @@ body {
   border-radius: 5px;
   z-index: 1000;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+input[type="number"] {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: #4caf50;
+  color: #fff;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+button:hover {
+  background-color: #45a049; 
+  transform: scale(1.05);
 }
 

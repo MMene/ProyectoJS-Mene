@@ -59,7 +59,7 @@ function mostrarInputCantidad(event) {
         confirmarButton.remove();
         productosConInput.delete(producto); // Eliminamos el producto del conjunto
       } else {
-        alert("Ingrese una cantidad válida.");
+        mostrarError();
       }
     });
 
@@ -86,7 +86,6 @@ function agregarAlCarrito(producto, precio, cantidad) {
     productoEncontrado.stock -= cantidad;
     actualizarCarrito();
     guardarCarritoEnStorage();
-    mostrarNotificacion("Producto agregado al carrito");
   } else {
     mostrarStockNoDisponible();
   }
@@ -121,6 +120,14 @@ function mostrarMensajeCompra() {
 
 function mostrarStockNoDisponible() {
   const mensajeStock = document.getElementById("mensaje-stock");
+  mensajeStock.style.display = "block";
+  setTimeout(() => {
+    mensajeStock.style.display = "none";
+  }, 3000);
+}
+
+function mostrarError() {
+  const mensajeStock = document.getElementById("mensaje-error");
   mensajeStock.style.display = "block";
   setTimeout(() => {
     mensajeStock.style.display = "none";
