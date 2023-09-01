@@ -1,9 +1,9 @@
 const lista = [
-  { nombre: "Sueter", precio: 5000, stock: 10 },
-  { nombre: "Pantalon", precio: 10000, stock: 5 },
-  { nombre: "Campera", precio: 50000, stock: 3 },
-  { nombre: "Remera", precio: 2000, stock: 25 },
-  { nombre: "Cadenita", precio: 1000, stock: 50 }
+  { nombre: "Sueter", precio: 5000, stock: 10, imagen:"sueter.jpg"},
+  { nombre: "Pantalon", precio: 10000, stock: 5, imagen: "pantalon.jpg"},
+  { nombre: "Campera", precio: 50000, stock: 3, imagen: "campera.jpg" },
+  { nombre: "Remera", precio: 2000, stock: 25, imagen: "remera.jpg" },
+  { nombre: "Cadenita", precio: 1000, stock: 50, imagen: "cadenita.jpg" }
 ];
 
 const carrito = [];
@@ -16,19 +16,19 @@ const repetirCompraButton = document.getElementById("repetir-compra");
 const mensajeCompra = document.getElementById("mensaje-compra");
 const productosConInput = new Set(); // Usamos un Set para almacenar los productos con inputs
 
-
 lista.forEach(producto => {
   const productoCard = document.createElement("div");
-  productoCard.classList.add("col-lg-4", "col-md-6", "mb-4"); // Estilos de Bootstrap para el diseño de la tarjeta
+  productoCard.classList.add("col-lg-4", "col-md-6", "mb-4"); 
   productoCard.innerHTML = `
-    <div class="card">
-      <div class="card-body">
-        <h5 class="card-title">${producto.nombre}</h5>
-        <p class="card-text">Precio: $${producto.precio}</p>
-        <p class="card-text">Stock: ${producto.stock} unidades</p>
-        <button class="btn btn-primary" data-producto="${producto.nombre}" data-precio="${producto.precio}">Agregar al Carrito</button>
-      </div>
-    </div>
+  <div class="card">
+  <div class="card-body d-flex flex-column align-items-center">
+    <h5 class="card-title">${producto.nombre}</h5>
+    <img src="./assets/images/${producto.imagen}" alt="${producto.nombre}" class="card-image">
+    <p class="card-text">$${producto.precio}</p>
+    <p class="card-text stock-counter" data-producto="${producto.nombre}">Stock: ${producto.stock} unidades</p>
+    <button class="btn btn-primary" data-producto="${producto.nombre}" data-precio="${producto.precio}">Agregar al Carrito</button>
+  </div>
+</div>
   `;
   productosDiv.appendChild(productoCard);
 });
@@ -37,7 +37,6 @@ const agregarBotones = document.querySelectorAll("[data-producto]");
 agregarBotones.forEach(button => {
   button.addEventListener("click", mostrarInputCantidad);
 });
-
 
 function mostrarInputCantidad(event) {
   const producto = event.target.getAttribute("data-producto");
@@ -85,26 +84,32 @@ function agregarAlCarrito(producto, precio, cantidad) {
     carrito.push({ producto, precio, cantidad });
     productoEncontrado.stock -= cantidad;
     actualizarCarrito();
+    actualizarStockEnDOM(productoEncontrado.nombre, productoEncontrado.stock); // Actualizar el stock en el DOM
     guardarCarritoEnStorage();
   } else {
     mostrarStockNoDisponible();
   }
 }
 
+function actualizarStockEnDOM(producto, stock) {
+  const stockCounter = document.querySelector(`.stock-counter[data-producto="${producto}"]`);
+  if (stockCounter) {
+    stockCounter.textContent = `Stock: ${stock} unidades`;
+  }
+}
+
 function actualizarCarrito() {
   carritoLista.innerHTML = "";
   let precioTotal = 0;
+  
   carrito.forEach(item => {
     const itemLi = document.createElement("li");
     itemLi.textContent = `${item.cantidad}x ${item.producto} - $${item.precio * item.cantidad}`;
     carritoLista.appendChild(itemLi);
     precioTotal += item.precio * item.cantidad;
   });
-  precioTotalElement.textContent = `Precio total: $${precioTotal}`;
 
-  if (repetirCompra) {
-    cargarCarritoDesdeStorage();
-  }
+  precioTotalElement.textContent = `Precio total: $${precioTotal}`;
 }
 
 function guardarCarritoEnStorage() {
@@ -112,27 +117,52 @@ function guardarCarritoEnStorage() {
 }
 
 function mostrarMensajeCompra() {
-  mensajeCompra.style.display = "block";
-  setTimeout(() => {
-    mensajeCompra.style.display = "none";
-  }, 3000);
+  Swal.fire({
+    icon: "success",
+    title: "¡Compra realizada!",
+    text: "¡Gracias por su compra!",
+    timer: 3000,
+    showConfirmButton: false
+  });
 }
 
+
 function mostrarStockNoDisponible() {
-  const mensajeStock = document.getElementById("mensaje-stock");
-  mensajeStock.style.display = "block";
-  setTimeout(() => {
-    mensajeStock.style.display = "none";
-  }, 3000);
+  Swal.fire({
+    icon: "error",
+    title: "Stock no disponible",
+    text: "No hay suficiente stock disponible",
+    timer: 3000,
+    showConfirmButton: false
+  });
 }
 
 function mostrarError() {
-  const mensajeStock = document.getElementById("mensaje-error");
-  mensajeStock.style.display = "block";
-  setTimeout(() => {
-    mensajeStock.style.display = "none";
-  }, 3000);
+  Swal.fire({
+    icon: "warning",
+    title: "Cantidad inválida",
+    text: "Ingrese una cantidad válida",
+    timer: 3000,
+    showConfirmButton: false
+  });
 }
+
+fetch("api.json")
+.then(response => response.json())
+.then(data => {
+  const promo = data.promo
+  
+  const promoContainer = document.getElementById("promo-container")
+
+  promo.forEach((x)=>{
+    const promoElement = document.createElement("p")
+    promoElement.textContent = `PROMO IMPERDIBLE: ${x.imperdible}, ${x.productos}, Ubicación: ${x.ubicacion}`
+    promoContainer.appendChild(promoElement)
+  })
+})
+.catch(error =>{
+  console.log("exploto todo")
+})
 
 
 finalizarCompraButton.addEventListener("click", () => {
@@ -145,7 +175,6 @@ finalizarCompraButton.addEventListener("click", () => {
 repetirCompraButton.addEventListener("click", () => {
   cargarCarritoDesdeStorage();
   actualizarCarrito(true);
-});
-
+}); 
 
 

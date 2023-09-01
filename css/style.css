@@ -5,6 +5,7 @@ html, body {
 body {
     margin: 0;
     padding: 0;
+    background-color: black;
   }
   
   .header {
@@ -13,17 +14,20 @@ body {
     background-position: center;
     height: 300px;
     max-width: 100%;
+    margin-bottom: 30px;
   }
   
-  .navbar {
+  /* NAVBAR QUE VOY A UTILIZAR DESPUES PARA FORMALIZAR EL PROYECTO
+  /* .navbar {
     width: 80%;
     margin-left: auto;
     margin-right: auto;
     background-color: transparent;
     border: none;
     color: black;
-  }
-  
+  } */ */
+
+
 /* Estilos para las tarjetas de productos */
 .card {
   margin-left: 30px;
@@ -33,6 +37,11 @@ body {
   border: 1px solid #ccc;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-size: cover;
+  background-position: center;
+}
+.card-body{
+  background-color: blanchedalmond;
 }
 
 .card-title {
@@ -42,34 +51,20 @@ body {
 .card-text {
   font-size: 1rem;
   color: #555;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif
 }
 
-/* Espaciado entre las tarjetas */
+.card-image {
+  width: 250px; 
+  height: 250px;
+  margin-bottom: 10px; 
+}
+
 .mb-4 {
   margin-bottom: 1.5rem;
 }
 
-.error {
-  background-color: #ff5722;
-}
 
-.popup {
-  display: none;
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background-color: #af5b4c;
-  color: #fff;
-  padding: 10px 20px;
-  border-radius: 5px;
-  z-index: 1000;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  animation: fadeOut 6s forwards;
-}
-.advertencia{
-  background-color: yellow;
-  color: black;
-}
 
 @keyframes fadeOut {
   0% {
@@ -151,3 +146,21 @@ button:hover {
   transform: scale(1.05);
 }
 
+#promo-container {
+  background-color: blanchedalmond;
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  color: black;
+  font-size: large;
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: bold;
+}
+
+.stock-counter {
+  font-size: 16px;
+  color: #ff5733; 
+  margin-top: 5px;
+  font-weight: bold; 
+}
